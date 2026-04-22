@@ -1,9 +1,9 @@
-name: Monitor wednesday Post
+name: Monitor Wednesday Post
 
 on:
   schedule:
-    - cron: '30 10 * * 1'   # 10:30 UTC — через 30 мин после публикации
-    - cron: '45 10 * * 1'   # 10:45 UTC — вторая проверка
+    - cron: '30 10 * * 3'
+    - cron: '45 10 * * 3'
   workflow_dispatch:
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          DAY: monday
+          DAY: wednesday
           ATTEMPT: ${{ github.run_attempt }}
           MAX_ATTEMPTS: 2
         run: python scripts/check_posting.py
