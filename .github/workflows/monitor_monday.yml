@@ -1,0 +1,27 @@
+name: Monitor Monday Post
+
+on:
+  schedule:
+    - cron: '30 10 * * 1'   # 10:30 UTC — через 30 мин после публикации
+    - cron: '45 10 * * 1'   # 10:45 UTC — вторая проверка
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests gspread google-auth
+      - name: Check post status
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DAY: monday
+          ATTEMPT: ${{ github.run_attempt }}
+          MAX_ATTEMPTS: 2
+        run: python scripts/check_posting.py
