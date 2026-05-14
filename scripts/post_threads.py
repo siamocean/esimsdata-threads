@@ -125,7 +125,7 @@ def send_telegram_notification(day_name, text, post_url):
         return
     safe_text = text[:120].replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
     msg = (
-        f"\u2705 <b>Threads @esimsData</b>\n\n"
+        f"\u2705 <b>Threads @esim.russia</b>\n\n"
         f"\ud83d\udcc5 {day_name}\n"
         f"\ud83d\udcdd {safe_text}...\n"
         f"\ud83d\udd17 {post_url}"
