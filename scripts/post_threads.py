@@ -121,19 +121,21 @@ def send_telegram_notification(day_name, text, post_url):
     token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
     chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
     if not token or not chat_id:
+        print("Telegram skipped: no token or chat_id")
         return
+    safe_text = text[:120].replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
     msg = (
-        f"✅ *Новая публикация — Threads @esimsData*\n\n"
-        f"📅 {day_name}\n"
-        f"📝 {text[:120]}...\n"
-        f"🔗 [Открыть пост]({post_url})"
+        f"\u2705 <b>Threads @esimsData</b>\n\n"
+        f"\ud83d\udcc5 {day_name}\n"
+        f"\ud83d\udcdd {safe_text}...\n"
+        f"\ud83d\udd17 {post_url}"
     )
-    requests.post(
+    resp = requests.post(
         f"https://api.telegram.org/bot{token}/sendMessage",
-        json={"chat_id": chat_id, "text": msg, "parse_mode": "Markdown"},
+        json={"chat_id": chat_id, "text": msg, "parse_mode": "HTML"},
         timeout=15
     )
-    print("Telegram sent")
+    print(f"Telegram response: {resp.status_code} {resp.text[:100]}")
 
 def main():
     day_env = os.environ.get("DAY", "monday").lower()
